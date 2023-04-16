@@ -20,8 +20,8 @@ const LrcVisualizerContainer = styled.div`
   width: 80%;
   max-height: 500px;
   overflow-y: scroll;
-  background-color: gray;
-  margin: 10px;
+  background-color: var(--surface);
+  margin: 30px;
   padding: 20px;
   border-radius: 4px;
   -ms-overflow-style: none; /* IE and Edge */
