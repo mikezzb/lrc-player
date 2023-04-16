@@ -57,7 +57,6 @@ export function parse(lrcString: string, option: TrimOptios = {}): LrcLyrics {
       const text = line.slice(timeTag.lastIndex);
       let wordMatch;
       while ((wordMatch = wordTag.exec(text)) !== null) {
-        console.log(wordMatch);
         words.push({
           time: tag2seconds(wordMatch),
           text: wordMatch[3]

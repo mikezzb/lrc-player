@@ -23,7 +23,7 @@ const LrcVisualizerContainer = styled.div`
   background-color: gray;
   margin: 10px;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 4px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   ::-webkit-scrollbar {
@@ -37,7 +37,7 @@ type LrcVisualizerProps = {
 };
 
 type LrcComponentProps = {
-  alt?: boolean;
+  altColor?: boolean;
 };
 
 const LrcLine = styled.div<LrcComponentProps>`
@@ -46,7 +46,7 @@ const LrcLine = styled.div<LrcComponentProps>`
   height: fit-content;
   align-items: start;
   color: ${(props) =>
-    (props as any).alt ? "white" : "rgba(231, 234, 246, 0.76)"};
+    (props as any).altColor ? "white" : "rgba(231, 234, 246, 0.76)"};
   font-family: "Noto Sans JP", Arial;
   font-size: 30px;
   line-height: 1.8;
@@ -54,7 +54,7 @@ const LrcLine = styled.div<LrcComponentProps>`
 `;
 
 const LrcWord = styled.div<LrcComponentProps>`
-  color: ${(props) => ((props as any).alt ? "#ff0a85e8" : "")};
+  color: ${(props) => ((props as any).altColor ? "#ff0a85e8" : "")};
   margin-right: 6px;
   cursor: pointer;
 `;
@@ -92,7 +92,7 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({ lrc, audioRef }) => {
         return (
           <LrcLine
             key={`${line.time}_${lineIdx}`}
-            alt={withinRange(
+            altColor={withinRange(
               lrc.lines,
               lineIdx,
               currentTime,
@@ -105,7 +105,7 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({ lrc, audioRef }) => {
                   audioRef.current.currentTime = word.time;
                 }}
                 key={`${word.text}_${word.time}_${wordIdx}`}
-                alt={withinRange(
+                altColor={withinRange(
                   line.words,
                   wordIdx,
                   currentTime,
@@ -149,6 +149,7 @@ const LrcPlayer: FC = () => {
         reader.onload = (event) => {
           const raw = (event.target as any).result;
           lrcData.lrc = parse(raw);
+          console.log(lrcData.lrc)
           if (lrcData.lrc && lrcData.audioUrl) {
             setReady(true);
           }
