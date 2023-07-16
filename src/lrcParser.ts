@@ -1,11 +1,11 @@
-export type LyricSegment = {
+export type LyricWord = {
   time: number;
   text: string;
 };
 
 export type LyricLine = {
   time: number;
-  words: LyricSegment[];
+  words: LyricWord[];
   numWords: number;
 };
 
@@ -24,7 +24,7 @@ export const parse = (lrcString: string): LrcLyrics => {
   const lines = lrcString.split(/\r\n|\n|\r/u);
 
   const timeTag = /\[\s*(\d{1,3}):(\d{1,2}(?:[:.]\d{1,3})?)\s*]/g;
-  const wordTag = /<(\d{1,3}):(\d{1,2}(?:[:.]\d{1,3})?)>\s*(\w+)/g;
+  const wordTag = /<(\d{1,3}):(\d{1,2}(?:[:.]\d{1,3})?)>\s*([a-zA-Z\u4e00-\u9fa5]+(?:-[a-zA-Z\u4e00-\u9fa5]+)*)/g;
 
   const lyricsLines: LyricLine[] = [];
 
@@ -32,7 +32,7 @@ export const parse = (lrcString: string): LrcLyrics => {
     if (line[0] !== "[") {
       continue;
     }
-    const words: LyricSegment[] = [];
+    const words: LyricWord[] = [];
     timeTag.lastIndex = 0;
     const rTimeTag = timeTag.exec(line);
     if (rTimeTag !== null) {
