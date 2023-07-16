@@ -1,6 +1,6 @@
 import { FC, RefObject, useEffect, useRef, MutableRefObject } from "react";
 import styled from "styled-components";
-import { LrcLyrics, LyricLine, LyricWord } from "../lrcParser";
+import { LrcLyrics, LyricLine, LyricWord } from "../utils/lrcParser";
 
 type LrcVisualizerProps = {
   lrc: LrcLyrics;

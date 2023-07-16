@@ -1,7 +1,7 @@
 import { FC, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
-import { LrcLyrics, parse } from "../lrcParser";
+import { LrcLyrics, parse } from "../utils/lrcParser";
 import LrcVisualizer from "./LrcVisualizer";
 
 const Tips = styled.div`
