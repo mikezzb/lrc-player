@@ -117,7 +117,9 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
       right = arr.length - 1;
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
-      if (arr[mid].time >= time) {
+      if (arr[mid].time === time) {
+        return mid;
+      } else if (arr[mid].time > time) {
         right = mid - 1;
       } else {
         left = mid + 1;
@@ -155,32 +157,30 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
 
   return (
     <LrcVisualizerContainer>
-      {lrc.lines.map((line, lineIdx) => {
-        return (
-          <LrcLine
-            key={`${line.time}_${lineIdx}`}
-            ref={(el) => pushToArr(el, lineRefs, lineIdx)}
-          >
-            {line.words.map((word, wordIdx) => (
-              <LrcWord
-                onClick={() => setAudioTime(word.time)}
-                key={`${word.text}_${word.time}_${wordIdx}`}
-                ref={(el) => {
-                  if (wordLevel) {
-                    pushToArr(
-                      el,
-                      wordRefs,
-                      numWordsPresumRef.current[lineIdx] + wordIdx
-                    );
-                  }
-                }}
-              >
-                {word.text}
-              </LrcWord>
-            ))}
-          </LrcLine>
-        );
-      })}
+      {lrc.lines.map((line, lineIdx) => (
+        <LrcLine
+          key={`${line.time}_${lineIdx}`}
+          ref={(el) => pushToArr(el, lineRefs, lineIdx)}
+        >
+          {line.words.map((word, wordIdx) => (
+            <LrcWord
+              onClick={() => setAudioTime(word.time)}
+              key={`${word.text}_${word.time}_${wordIdx}`}
+              ref={(el) => {
+                if (wordLevel) {
+                  pushToArr(
+                    el,
+                    wordRefs,
+                    numWordsPresumRef.current[lineIdx] + wordIdx
+                  );
+                }
+              }}
+            >
+              {word.text}
+            </LrcWord>
+          ))}
+        </LrcLine>
+      ))}
     </LrcVisualizerContainer>
   );
 };
