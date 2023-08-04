@@ -49,7 +49,7 @@ const LrcLine = styled.div<LrcComponentProps>`
   transition: color 200ms linear;
 `;
 
-const LrcWord = styled.div<LrcComponentProps>`
+const LrcWord = styled.span<LrcComponentProps>`
   &.active {
     color: #ff0a53e8;
   }
@@ -69,10 +69,10 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
   wordLevel,
 }) => {
   const lineRefs = useRef<HTMLDivElement[]>([]);
-  const wordRefs = useRef<HTMLDivElement[]>([]);
+  const wordRefs = useRef<HTMLSpanElement[]>([]);
   const highlightRefs = useRef<{
     line?: HTMLDivElement;
-    word?: HTMLDivElement;
+    word?: HTMLSpanElement;
   }>({});
   // store start index of words for each line to speed up highlight word lookup
   const numWordsPresumRef = useRef<number[]>([]);
@@ -84,14 +84,14 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
       const lineIdx = searchTimeBefore(lrc.lines, currentTime);
       const line = lineRefs.current[lineIdx];
       if (!line) return;
-      highlightDiv(line);
+      highlightNode(line);
       if (!wordLevel) return;
       // highlight the word
       const wordIdx = searchTimeBefore(lrc.lines[lineIdx].words, currentTime);
       if (wordIdx === -1) return; // the first words is NOT started => shall NOT highlight
       const wordPresum = numWordsPresumRef.current[lineIdx];
       const word = wordRefs.current[wordPresum + wordIdx];
-      highlightDiv(word, "word");
+      highlightNode(word, "word");
     };
     // compute word index presum for each line
     if (wordLevel) {
@@ -135,7 +135,7 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
     }
   };
 
-  const highlightDiv = (el: HTMLDivElement, key = "line") => {
+  const highlightNode = (el: HTMLDivElement | HTMLSpanElement, key = "line") => {
     if (!el || highlightRefs[key] === el) return;
     clearHighlight(key);
     el.className += " active";
@@ -161,10 +161,15 @@ const LrcVisualizer: FC<LrcVisualizerProps> = ({
         <LrcLine
           key={`${line.time}_${lineIdx}`}
           ref={(el) => pushToArr(el, lineRefs, lineIdx)}
+          onClick={e => {
+            const wordSpan = e.target as HTMLSpanElement;
+            if (!wordSpan) return;
+            setAudioTime(+wordSpan.attributes.getNamedItem('data-time').value);
+          }}
         >
           {line.words.map((word, wordIdx) => (
             <LrcWord
-              onClick={() => setAudioTime(word.time)}
+              data-time={word.time}
               key={`${word.text}_${word.time}_${wordIdx}`}
               ref={(el) => {
                 if (wordLevel) {
